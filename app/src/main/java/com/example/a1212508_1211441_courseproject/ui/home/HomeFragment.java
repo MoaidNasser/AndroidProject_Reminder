@@ -72,8 +72,25 @@ public class HomeFragment extends Fragment {
             return root;
         }
 
+
+        boolean allCompleted = false;
+
+        // Fetch today tasks for the logged-in user, sorted by due date (SQL query handles sorting)
         todayTasksList = dbHelper.getAllTodayTasks(loggedInUserEmail, todayDate);
-        filteredTasksList = new ArrayList<>(todayTasksList);
+        filteredTasksList = new ArrayList<>(todayTasksList); // Initially show all tasks
+
+        for (int i = 0; i < todayTasksList.size(); i++) {
+            if (todayTasksList.get(i).getStatus().equals("Completed"))
+                allCompleted = true;
+            else
+                allCompleted = false;
+        }
+
+        if (allCompleted)
+            Toast.makeText(getContext(), "Congratulations <3\nYou completed all tasks for today!", Toast.LENGTH_LONG).show();
+
+
+
 
         taskAdapter = new TaskAdapter(filteredTasksList, task -> showTaskOptions(task));
         recyclerView.setAdapter(taskAdapter);
