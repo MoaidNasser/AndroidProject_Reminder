@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <!-- Fragment for Today Tasks -->
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.a1212508_1211441_courseproject.ui.home.HomeFragment"
+        android:label="@string/menu_today"
+        tools:layout="@layout/fragment_home" />
+
+    <!-- Fragment for New Task -->
+    <fragment
+        android:id="@+id/nav_new_task"
+        android:name="com.example.a1212508_1211441_courseproject.ui.newtask.NewTaskFragment"
+        android:label="@string/menu_new_task"
+        tools:layout="@layout/fragment_new_task" />
+
+    <!-- Fragment for All Tasks -->
+    <fragment
+        android:id="@+id/nav_all_tasks"
+        android:name="com.example.a1212508_1211441_courseproject.ui.alltasks.AllTasksFragment"
+        android:label="@string/menu_all_tasks"
+        tools:layout="@layout/fragment_all_tasks" />
+
+    <!-- Fragment for Completed Tasks -->
+    <fragment
+        android:id="@+id/nav_completed"
+        android:name="com.example.a1212508_1211441_courseproject.ui.completedtasks.CompletedTasksFragment"
+        android:label="@string/menu_completed"
+        tools:layout="@layout/fragment_completed_tasks" />
+
+    <!-- Fragment for Search -->
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.example.a1212508_1211441_courseproject.ui.searchtask.SearchFragment"
+        android:label="@string/menu_search"
+        tools:layout="@layout/fragment_search" />
+
+    <!-- Fragment for Profile -->
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="com.example.a1212508_1211441_courseproject.ui.profile.ProfileFragment"
+        android:label="@string/menu_profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <!-- Fragment for Logout -->
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.example.a1212508_1211441_courseproject.ui.logout.LogoutFragment"
+        android:label="@string/menu_logout"
+        tools:layout="@layout/fragment_logout" />
+
+</navigation>

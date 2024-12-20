@@ -1,0 +1,75 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
+
+    <EditText
+        android:id="@+id/editTextTaskTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Task Title"
+        android:inputType="text"
+        android:layout_marginBottom="12dp"
+        android:padding="16dp"
+        android:minHeight="80dp" />
+
+    <EditText
+        android:id="@+id/editTextTaskDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Task Description"
+        android:inputType="text"
+        android:layout_marginBottom="12dp"
+        android:padding="16dp"
+        android:minHeight="80dp" />
+
+    <Button
+        android:id="@+id/buttonDueDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Due Date"
+        android:layout_marginBottom="12dp"
+        android:padding="16dp"
+        android:minHeight="80dp" />
+
+    <Button
+        android:id="@+id/buttonDueTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Due Time"
+        android:layout_marginBottom="12dp"
+        android:padding="16dp"
+        android:minHeight="80dp" />
+
+    <Spinner
+        android:id="@+id/spinnerPriority"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:padding="16dp"
+        android:minHeight="80dp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxReminder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Reminder"
+        android:layout_marginBottom="12dp" />
+
+    <CheckBox
+        android:id="@+id/checkBoxCompletionStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mark as Completed"
+        android:layout_marginBottom="12dp" />
+
+    <Button
+        android:id="@+id/buttonSaveTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Task"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>
