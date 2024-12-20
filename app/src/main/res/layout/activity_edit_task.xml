@@ -3,7 +3,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:background="#2196F3">
+
+    <TextView
+        android:id="@+id/editTaskLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Task"
+        android:textSize="23sp"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="123dp"
+        android:layout_height="137dp"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="Task Image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/tasksicon8" />
+
 
     <EditText
         android:id="@+id/editTaskTitle"
@@ -11,58 +32,87 @@
         android:layout_height="wrap_content"
         android:hint="Task Title"
         android:inputType="text"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="16dp"
         android:padding="16dp"
-        android:minHeight="80dp" />
+        android:background="@drawable/rounded_edit_text"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:elevation="4dp" />
+
 
     <EditText
         android:id="@+id/editTaskDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Task Description"
-        android:inputType="text"
-        android:layout_marginBottom="12dp"
+        android:inputType="textMultiLine"
+        android:layout_marginBottom="16dp"
         android:padding="16dp"
-        android:minHeight="80dp" />
+        android:background="@drawable/rounded_edit_text"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:elevation="4dp" />
+
 
     <Button
         android:id="@+id/editButtonDueDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select Due Date"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="16dp"
         android:padding="16dp"
-        android:minHeight="80dp" />
+        android:backgroundTint="#3F51B5"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:elevation="6dp" />
+
 
     <Button
         android:id="@+id/editButtonDueTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select Due Time"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="16dp"
         android:padding="16dp"
-        android:minHeight="80dp" />
+        android:backgroundTint="#3F51B5"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:elevation="6dp" />
+
 
     <Spinner
         android:id="@+id/editTaskPriority"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:padding="16dp"
-        android:minHeight="80dp" />
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="@drawable/rounded_spinner"
+        android:popupBackground="#FFFFFF"
+        android:elevation="4dp" />
+
 
     <Spinner
         android:id="@+id/editTaskStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:padding="16dp"
-        android:minHeight="80dp" />
+        android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:background="@drawable/rounded_spinner"
+        android:popupBackground="#FFFFFF"
+        android:elevation="4dp" />
+
 
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save Task"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="32dp"
+        android:paddingVertical="12dp"
+        android:backgroundTint="#FF4081"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:elevation="8dp" />
+
 </LinearLayout>
