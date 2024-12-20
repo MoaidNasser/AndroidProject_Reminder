@@ -1,13 +1,17 @@
 package com.example.a1212508_1211441_courseproject;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -41,6 +45,9 @@ public class HomeActivity extends AppCompatActivity {
         // Load saved theme preference
         SharedPreferences prefs = getSharedPreferences("theme", MODE_PRIVATE);
         boolean isDarkMode = prefs.getBoolean("is_dark_mode", false);
+        // Retrieve user email from Intent
+
+
 
         AppCompatDelegate.setDefaultNightMode(
                 isDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO
@@ -48,13 +55,37 @@ public class HomeActivity extends AppCompatActivity {
 
         // Set up the toolbar
         setSupportActionBar(binding.appBarHome.toolbar);
+
+// FAB click listener to fetch data from API and store in DB
         binding.appBarHome.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                // Retrieve user email from Intent
+                String userEmail = getIntent().getStringExtra("email");
+
+
+                if (userEmail == null || userEmail.isEmpty()) {
+                    // Display an error message if the email is not provided
+                    Snackbar.make(view, "User email is missing!", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
+                // API URL to fetch tasks (replace with your actual endpoint)
+                String apiUrl = "https://mocki.io/v1/df74e5a3-3a97-4e5a-8429-7108f1d50e75";
+
+                // Create an instance of the database helper
+                DataBaseHelper dbHelper = new DataBaseHelper(HomeActivity.this);
+
+                // Execute the AsyncTask to fetch data from the API and store it in the DB
+                new ConnectionAsyncTask(HomeActivity.this, dbHelper, userEmail).execute(apiUrl);
+
+                // Show a confirmation message
+                Snackbar.make(view, "Fetching and storing tasks...", Snackbar.LENGTH_SHORT).show();
             }
         });
+
+
+
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;

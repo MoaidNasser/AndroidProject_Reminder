@@ -4,15 +4,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +29,8 @@ import com.example.a1212508_1211441_courseproject.databinding.FragmentHomeBindin
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,6 +44,7 @@ public class HomeFragment extends Fragment {
     private List<TaskModel> filteredTasksList; // List to hold filtered tasks
     private DataBaseHelper dbHelper;
     private EditText searchEditText; // Search bar input
+    private CheckBox sortByPriorityCheckBox; // CheckBox to toggle sorting by priority
 
     public HomeFragment() {
         // Required empty public constructor
@@ -56,6 +58,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         searchEditText = root.findViewById(R.id.searchEditText); // Initialize search bar
+        sortByPriorityCheckBox = root.findViewById(R.id.sortByPriorityCheckBox); // Initialize CheckBox
 
         dbHelper = new DataBaseHelper(getContext());
 
@@ -72,25 +75,24 @@ public class HomeFragment extends Fragment {
             return root; // Return early if no user is logged in
         }
 
-        boolean allCompleted = false;
-
-        // Fetch today tasks for the logged-in user, sorted by due date (SQL query handles sorting)
+        // Fetch today tasks for the logged-in user
         todayTasksList = dbHelper.getAllTodayTasks(loggedInUserEmail, todayDate);
         filteredTasksList = new ArrayList<>(todayTasksList); // Initially show all tasks
-
-        for (int i = 0; i < todayTasksList.size(); i++) {
-            if (todayTasksList.get(i).getStatus().equals("Completed"))
-                allCompleted = true;
-            else
-                allCompleted = false;
-        }
-
-        if (allCompleted)
-            Toast.makeText(getContext(), "Congratulations <3\nYou completed all tasks for today!", Toast.LENGTH_LONG).show();
 
         // Initialize the adapter with the filtered list
         taskAdapter = new TaskAdapter(filteredTasksList, task -> showTaskOptions(task));
         recyclerView.setAdapter(taskAdapter);
+
+        // Set up sorting by priority CheckBox listener
+        sortByPriorityCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                sortTasksByPriority();
+            } else {
+                filteredTasksList.clear();
+                filteredTasksList.addAll(todayTasksList); // Reset to default order
+                taskAdapter.notifyDataSetChanged();
+            }
+        });
 
         // Set up search bar listener
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -126,6 +128,30 @@ public class HomeFragment extends Fragment {
         taskAdapter.notifyDataSetChanged(); // Update the RecyclerView
     }
 
+    private void sortTasksByPriority() {
+        Collections.sort(filteredTasksList, new Comparator<TaskModel>() {
+            @Override
+            public int compare(TaskModel t1, TaskModel t2) {
+                // High = 1, Medium = 2, Low = 3
+                return Integer.compare(getPriorityValue(t1.getPriority()), getPriorityValue(t2.getPriority()));
+            }
+
+            private int getPriorityValue(String priority) {
+                switch (priority) {
+                    case "High":
+                        return 1;
+                    case "Medium":
+                        return 2;
+                    case "Low":
+                        return 3;
+                    default:
+                        return 2; // Default to Medium
+                }
+            }
+        });
+
+        taskAdapter.notifyDataSetChanged();
+    }
 
     private void showTaskOptions(TaskModel task) {
         // Create an AlertDialog to display task details and options to Delete or Edit
@@ -139,48 +165,29 @@ public class HomeFragment extends Fragment {
                         "Priority: " + task.getPriority() + "\n" +
                         "Status: " + task.getStatus()
                 )
-                .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Call the edit function (start EditTaskActivity with the task data)
-                        editTask(task);
-                    }
-                })
-                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Call the delete function
-                        deleteTask(task);
-                    }
-                })
+                .setPositiveButton("Edit", (dialog, which) -> editTask(task))
+                .setNegativeButton("Delete", (dialog, which) -> deleteTask(task))
                 .setNeutralButton("Cancel", null)  // Close the dialog
                 .show();
     }
 
     private void editTask(TaskModel task) {
-        // Create an Intent to start EditTaskActivity
         Intent intent = new Intent(getContext(), EditTaskActivity.class);
-
-        // Pass task data to the EditTaskActivity
         intent.putExtra("taskId", task.getId());
         intent.putExtra("taskTitle", task.getTitle());
         intent.putExtra("taskDescription", task.getDescription());
         intent.putExtra("taskDueDate", task.getDueDate());
         intent.putExtra("taskPriority", task.getPriority());
         intent.putExtra("taskStatus", task.getStatus());
-
-        // Start EditTaskActivity
         startActivity(intent);
     }
 
     private void deleteTask(TaskModel task) {
-        // Delete the task from the database
         boolean isDeleted = dbHelper.deleteTask(task.getId());
-
         if (isDeleted) {
             Toast.makeText(getContext(), "Task deleted successfully", Toast.LENGTH_SHORT).show();
-            // Update the RecyclerView by removing the task
             todayTasksList.remove(task);
+            filteredTasksList.remove(task);
             taskAdapter.notifyDataSetChanged();
         } else {
             Toast.makeText(getContext(), "Failed to delete task", Toast.LENGTH_SHORT).show();

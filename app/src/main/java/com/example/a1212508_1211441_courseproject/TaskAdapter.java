@@ -84,7 +84,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             super(itemView);
             titleTextView = itemView.findViewById(R.id.textViewTaskTitle);
             dueDateTextView = itemView.findViewById(R.id.textViewDueDate);
-            aSwitch = itemView.findViewById(R.id.switch1);
+            aSwitch = itemView.findViewById(R.id.switchReminder);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

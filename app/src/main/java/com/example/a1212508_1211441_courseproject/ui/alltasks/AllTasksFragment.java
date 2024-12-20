@@ -1,16 +1,14 @@
 package com.example.a1212508_1211441_courseproject.ui.alltasks;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -25,8 +23,9 @@ import com.example.a1212508_1211441_courseproject.TaskAdapter;
 import com.example.a1212508_1211441_courseproject.TaskModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
 
 public class AllTasksFragment extends Fragment {
 
@@ -36,6 +35,7 @@ public class AllTasksFragment extends Fragment {
     private List<TaskModel> filteredTasksList; // List to hold filtered tasks
     private DataBaseHelper dbHelper;
     private EditText searchEditText; // Search bar input
+    private CheckBox sortByPriorityCheckBox; // Checkbox for sorting by priority
 
     public AllTasksFragment() {
         // Required empty public constructor
@@ -49,6 +49,7 @@ public class AllTasksFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         searchEditText = rootView.findViewById(R.id.searchEditText); // Initialize search bar
+        sortByPriorityCheckBox = rootView.findViewById(R.id.sortByPriorityCheckBox); // Initialize checkbox
 
         dbHelper = new DataBaseHelper(getContext());
 
@@ -83,6 +84,15 @@ public class AllTasksFragment extends Fragment {
             public void afterTextChanged(Editable s) {}
         });
 
+        // Set up checkbox listener for sorting by priority
+        sortByPriorityCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                sortTasksByPriority();
+            } else {
+                resetTaskOrder();
+            }
+        });
+
         return rootView;
     }
 
@@ -103,42 +113,42 @@ public class AllTasksFragment extends Fragment {
         taskAdapter.notifyDataSetChanged(); // Update the RecyclerView
     }
 
+    private void sortTasksByPriority() {
+        Collections.sort(filteredTasksList, new Comparator<TaskModel>() {
+            @Override
+            public int compare(TaskModel t1, TaskModel t2) {
+                return t1.getPriority().compareTo(t2.getPriority());
+            }
+        });
+        taskAdapter.notifyDataSetChanged();
+    }
+
+    private void resetTaskOrder() {
+        filteredTasksList.clear();
+        filteredTasksList.addAll(allTasksList);
+        taskAdapter.notifyDataSetChanged();
+    }
 
     private void showTaskOptions(TaskModel task) {
-        // Create an AlertDialog to display task details and options to Delete or Edit
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-        // Set task details as message in the dialog
         builder.setTitle("Task Details")
-                .setMessage("Title: " + task.getTitle() + "\n" +
-                        "Description: " + task.getDescription() + "\n" +
-                        "Due Date: " + task.getDueDate() + "\n" +
-                        "Priority: " + task.getPriority() + "\n" +
-                        "Status: " + task.getStatus()
+                .setMessage(
+                        "Title: " + task.getTitle() + "\n" +
+                                "Description: " + task.getDescription() + "\n" +
+                                "Due Date: " + task.getDueDate() + "\n" +
+                                "Priority: " + task.getPriority() + "\n" +
+                                "Status: " + task.getStatus()
                 )
-                .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Call the edit function (start EditTaskActivity with the task data)
-                        editTask(task);
-                    }
-                })
-                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Call the delete function
-                        deleteTask(task);
-                    }
-                })
-                .setNeutralButton("Cancel", null)  // Close the dialog
+                .setPositiveButton("Edit", (dialog, which) -> editTask(task))
+                .setNegativeButton("Delete", (dialog, which) -> deleteTask(task))
+                .setNeutralButton("Cancel", null)
                 .show();
     }
 
     private void editTask(TaskModel task) {
-        // Create an Intent to start EditTaskActivity
         Intent intent = new Intent(getContext(), EditTaskActivity.class);
 
-        // Pass task data to the EditTaskActivity
         intent.putExtra("taskId", task.getId());
         intent.putExtra("taskTitle", task.getTitle());
         intent.putExtra("taskDescription", task.getDescription());
@@ -146,17 +156,14 @@ public class AllTasksFragment extends Fragment {
         intent.putExtra("taskPriority", task.getPriority());
         intent.putExtra("taskStatus", task.getStatus());
 
-        // Start EditTaskActivity
         startActivity(intent);
     }
 
     private void deleteTask(TaskModel task) {
-        // Delete the task from the database
         boolean isDeleted = dbHelper.deleteTask(task.getId());
 
         if (isDeleted) {
             Toast.makeText(getContext(), "Task deleted successfully", Toast.LENGTH_SHORT).show();
-            // Update the RecyclerView by removing the task
             allTasksList.remove(task);
             taskAdapter.notifyDataSetChanged();
         } else {

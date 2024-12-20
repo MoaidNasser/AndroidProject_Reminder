@@ -3,6 +3,7 @@ package com.example.a1212508_1211441_courseproject;
 public class TaskModel {
 
     private int id;
+    private String email;
     private String title;
     private String description;
     private String dueDate;
@@ -14,9 +15,21 @@ public class TaskModel {
     public static final String[] PRIORITIES = {"Low", "Medium", "High"};
     public static final String[] STATUSES = {"Pending", "In Progress", "Completed"};
 
+    // Constructor to set all default values
+    public TaskModel() {
+
+        this.title = "title";
+        this.description = "description";
+        this.dueDate = "dueDate";
+        this.priority = "priority";
+        this.status = "Medium";
+        this.reminder = 0;
+    }
+
     // Constructor to accept all required fields
-    public TaskModel(int id, String title, String description, String dueDate, String priority, String status, int reminder) {
+    public TaskModel(int id, String email, String title, String description, String dueDate, String priority, String status, int reminder) {
         this.id = id;
+        this.email = email;
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
@@ -26,98 +39,78 @@ public class TaskModel {
     }
 
     // Constructor to set all default values
-    public TaskModel() {
-        this.id = 0;
-        this.title = "title";
-        this.description = "description";
-        this.dueDate = "dueDate";
-        this.priority = "priority";
-        this.status = "Pending";
-        this.reminder = 0;
+    public TaskModel( String title, String description, String dueDate, String priority, String status, int reminder) {
+
+        this.title = title;
+        this.description = description;
+        this.dueDate = dueDate;
+        this.priority = priority;
+        this.status = status;
+        this.reminder = reminder;
     }
 
-    // Getters for all fields
+    // Getters and Setters for all fields
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getDueDate() {
-        return dueDate;
-    }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public int getReminder() {
-        return reminder;
-    }
-
-    // Setters for all fields
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public String getDueDate() {
+        return dueDate;
+    }
+
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 
+    public String getPriority() {
+        return priority;
+    }
+
     public void setPriority(String priority) {
-        if (isValidPriority(priority)) {
-            this.priority = priority;
-        } else {
-            this.priority = "Low"; // Default to Low if invalid priority
-        }
+        this.priority = priority;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public void setStatus(String status) {
-        if (isValidStatus(status)) {
-            this.status = status;
-        } else {
-            this.status = "Pending"; // Default to Pending if invalid status
-        }
+        this.status = status;
+    }
+
+    public int getReminder() {
+        return reminder;
     }
 
     public void setReminder(int reminder) {
         this.reminder = reminder;
-    }
-
-    // Validation methods for priority and status
-    private boolean isValidPriority(String priority) {
-        for (String validPriority : PRIORITIES) {
-            if (validPriority.equals(priority)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isValidStatus(String status) {
-        for (String validStatus : STATUSES) {
-            if (validStatus.equals(status)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

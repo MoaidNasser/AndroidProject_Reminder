@@ -11,7 +11,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "TaskManager.db";
@@ -48,7 +47,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS Tasks");
         onCreate(db);
     }
-
 
     // Register User
     public boolean registerUser(String email, String firstName, String lastName, String password) {
@@ -130,12 +128,40 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return success;
     }
 
+    public List<TaskModel> getAllTasksBetween(String email, String startDate, String endDate) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<TaskModel> tasks = new ArrayList<>();
+
+        // SQL query to fetch tasks sorted by due date (chronologically)
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM Tasks WHERE email = ? AND date(due_date_time) BETWEEN ? AND ? ORDER BY due_date_time ASC",
+                new String[]{email, startDate, endDate});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex("title"));
+                @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex("description"));
+                @SuppressLint("Range") String dueDateTime = cursor.getString(cursor.getColumnIndex("due_date_time"));
+                @SuppressLint("Range") String priority = cursor.getString(cursor.getColumnIndex("priority"));
+                @SuppressLint("Range") String status = cursor.getString(cursor.getColumnIndex("status"));
+                @SuppressLint("Range") int reminder = cursor.getInt(cursor.getColumnIndex("reminder"));
+
+                TaskModel task = new TaskModel( title, description, dueDateTime, priority, status, reminder);
+                tasks.add(task);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        return tasks;
+    }
 
 
-    /**
-     * Add a new task to the database.
-     */
-    public boolean addTask(String userEmail, String title, String description, String dueDateTime, String priority,String status, int reminder) {
+
+    // Add a new task to the database.
+    public boolean addTask(String userEmail, String title, String description, String dueDateTime, String priority, String status, int reminder) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -152,10 +178,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return result != -1; // Return true if insertion is successful
     }
 
-    /**
-     * Retrieve all tasks for a specific user.
-     */
-
+    // Retrieve all tasks for a specific user.
     public List<TaskModel> getAllTasksSortedByDate(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<TaskModel> tasks = new ArrayList<>();
@@ -167,7 +190,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
+                // Retrieve the task details including the ID
                 @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                @SuppressLint("Range") String email1 = cursor.getString(cursor.getColumnIndex("email"));
                 @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex("title"));
                 @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex("description"));
                 @SuppressLint("Range") String dueDateTime = cursor.getString(cursor.getColumnIndex("due_date_time"));
@@ -175,7 +200,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String status = cursor.getString(cursor.getColumnIndex("status"));
                 @SuppressLint("Range") int reminder = cursor.getInt(cursor.getColumnIndex("reminder"));
 
-                TaskModel task = new TaskModel(id, title, description, dueDateTime, priority, status, reminder);
+                // Create TaskModel object with ID
+                TaskModel task = new TaskModel(id, email1, title, description, dueDateTime, priority, status, reminder);
                 tasks.add(task);
             } while (cursor.moveToNext());
         }
@@ -187,10 +213,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return tasks;
     }
 
-    /**
-     * Retrieve today tasks for a specific user.
-     */
-
+    // Retrieve today tasks for a specific user.
     public List<TaskModel> getAllTodayTasks(String email, String today) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<TaskModel> tasks = new ArrayList<>();
@@ -203,6 +226,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                @SuppressLint("Range") String email1 = cursor.getString(cursor.getColumnIndex("email"));
                 @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex("title"));
                 @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex("description"));
                 @SuppressLint("Range") String dueDateTime = cursor.getString(cursor.getColumnIndex("due_date_time"));
@@ -210,7 +234,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String status = cursor.getString(cursor.getColumnIndex("status"));
                 @SuppressLint("Range") int reminder = cursor.getInt(cursor.getColumnIndex("reminder"));
 
-                TaskModel task = new TaskModel(id, title, description, dueDateTime, priority, status, reminder);
+                TaskModel task = new TaskModel(id, email1, title, description, dueDateTime, priority, status, reminder);
                 tasks.add(task);
             } while (cursor.moveToNext());
         }
@@ -222,11 +246,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return tasks;
     }
 
-
-    /**
-     * Retrieve all completed tasks for a specific user.
-     */
-
+    // Retrieve all completed tasks for a specific user.
     public List<TaskModel> getAllCompletedTasks(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<TaskModel> tasks = new ArrayList<>();
@@ -239,6 +259,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
+                @SuppressLint("Range") String email1 = cursor.getString(cursor.getColumnIndex("email"));
                 @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex("title"));
                 @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex("description"));
                 @SuppressLint("Range") String dueDateTime = cursor.getString(cursor.getColumnIndex("due_date_time"));
@@ -246,7 +267,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 @SuppressLint("Range") String status = cursor.getString(cursor.getColumnIndex("status"));
                 @SuppressLint("Range") int reminder = cursor.getInt(cursor.getColumnIndex("reminder"));
 
-                TaskModel task = new TaskModel(id, title, description, dueDateTime, priority, status, reminder);
+                TaskModel task = new TaskModel(id, email1, title, description, dueDateTime, priority, status, reminder);
                 tasks.add(task);
             } while (cursor.moveToNext());
         }
@@ -258,44 +279,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return tasks;
     }
 
-    /**
-     * Retrieve all tasks for a specific user within specific period.
-     */
-
-    public List<TaskModel> getAllTasksBetween(String email, String startDate, String endDate) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<TaskModel> tasks = new ArrayList<>();
-
-        // SQL query to fetch tasks sorted by due date (chronologically)
-        Cursor cursor = db.rawQuery(
-                "SELECT * FROM Tasks WHERE email = ? AND date(due_date_time) BETWEEN ? AND ? ORDER BY due_date_time ASC",
-                new String[]{email, startDate, endDate});
-
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                @SuppressLint("Range") int id = cursor.getInt(cursor.getColumnIndex("id"));
-                @SuppressLint("Range") String title = cursor.getString(cursor.getColumnIndex("title"));
-                @SuppressLint("Range") String description = cursor.getString(cursor.getColumnIndex("description"));
-                @SuppressLint("Range") String dueDateTime = cursor.getString(cursor.getColumnIndex("due_date_time"));
-                @SuppressLint("Range") String priority = cursor.getString(cursor.getColumnIndex("priority"));
-                @SuppressLint("Range") String status = cursor.getString(cursor.getColumnIndex("status"));
-                @SuppressLint("Range") int reminder = cursor.getInt(cursor.getColumnIndex("reminder"));
-
-                TaskModel task = new TaskModel(id, title, description, dueDateTime, priority, status, reminder);
-                tasks.add(task);
-            } while (cursor.moveToNext());
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        return tasks;
-    }
-
-    /**
-     * Update a task in the database.
-     */
+    // Update task
     public boolean updateTask(TaskModel task) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -311,21 +295,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return rowsAffected > 0;  // Return true if at least one row was updated
     }
 
-
-    /**
-     * Delete a task from the database.
-     */
+    // Delete task by id
     public boolean deleteTask(int taskId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int rowsDeleted = db.delete("Tasks", "id = ?", new String[]{String.valueOf(taskId)});
+        int rowsAffected = db.delete("Tasks", "id = ?", new String[]{String.valueOf(taskId)});
         db.close();
-        return rowsDeleted > 0;
+        return rowsAffected > 0;
     }
-
-
-
-//    public Cursor getTasksByUserEmail(String email) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        return db.rawQuery("SELECT * FROM Tasks WHERE email = ? ORDER BY due_date_time", new String[]{email});
-//    }
 }
