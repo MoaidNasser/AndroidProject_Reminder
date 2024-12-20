@@ -2,50 +2,68 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:clickable="true"
     android:orientation="horizontal"
     android:padding="16dp"
-    android:elevation="2dp"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="12dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/rounded_background"
+    android:elevation="8dp">
 
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_task_icon"
-        android:layout_marginEnd="16dp"
-        android:layout_gravity="center_vertical" />
+    <!-- Task Icon Section -->
+<ImageView
+android:layout_width="40dp"
+android:layout_height="40dp"
+android:src="@drawable/ic_task_icon"
+android:contentDescription="Task Icon"
+android:layout_marginEnd="16dp"
+android:layout_gravity="center_vertical" />
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+    <!-- Text Information Section -->
+<LinearLayout
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:layout_weight="1"
+android:orientation="vertical"
+android:gravity="start">
 
-        <TextView
-            android:id="@+id/textViewTaskTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
-            android:text="Task Title"
-            android:textSize="18sp"
-            android:textColor="@android:color/black" />
+<TextView
+    android:id="@+id/textViewTaskTitle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Task Title"
+    android:textSize="18sp"
+    android:textColor="#1976D2"
+    android:fontFamily="sans-serif-medium"
+    android:lineSpacingExtra="4dp"
+    android:paddingBottom="4dp"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:textAlignment="viewStart" />
 
-        <TextView
-            android:id="@+id/textViewDueDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Due Date"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <Switch
-        android:id="@+id/switchReminder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="Reminder"
-        android:textOff=""
-        android:textOn="" />
+<TextView
+    android:id="@+id/textViewDueDate"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Due Date"
+    android:textSize="14sp"
+    android:textColor="#757575"
+    android:fontFamily="sans-serif-light"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:textAlignment="viewStart" />
 </LinearLayout>
+
+    <!-- Reminder Switch Section -->
+<Switch
+android:id="@+id/switchReminder"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_gravity="center_vertical"
+android:text="Completed"
+android:textOff=""
+android:textOn=""
+android:thumbTint="#1976D2"
+android:trackTint="#BBDEFB"
+android:layout_marginStart="16dp" />
+
+    </LinearLayout>

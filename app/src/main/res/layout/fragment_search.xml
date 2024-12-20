@@ -3,8 +3,20 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#FFFFFF"> <!-- White background -->
 
+    <!-- ImageView Section (placed at the top) -->
+    <ImageView
+        android:id="@+id/imageViewTop"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/search"
+    android:contentDescription="Top Image"
+    android:layout_marginBottom="24dp"
+    android:scaleType="centerCrop"/>
+
+    <!-- Start Date Button -->
     <Button
         android:id="@+id/buttonStartDate"
         android:layout_width="match_parent"
@@ -12,8 +24,13 @@
         android:layout_marginBottom="12dp"
         android:minHeight="80dp"
         android:padding="16dp"
-        android:text="Select Start Date" />
+        android:text="Select Start Date"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#1976D2"
+        android:fontFamily="sans-serif-medium"
+        android:elevation="4dp" />
 
+    <!-- End Date Button -->
     <Button
         android:id="@+id/buttonEndDate"
         android:layout_width="match_parent"
@@ -21,17 +38,31 @@
         android:layout_marginBottom="12dp"
         android:minHeight="80dp"
         android:padding="16dp"
-        android:text="Select End Date" />
+        android:text="Select End Date"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#1976D2"
+        android:fontFamily="sans-serif-medium"
+        android:elevation="4dp" />
 
+    <!-- Search Button -->
     <Button
         android:id="@+id/buttonSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Search" />
+        android:padding="16dp"
+        android:text="Search"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#1976D2"
+        android:fontFamily="sans-serif-medium"
+        android:elevation="4dp" />
 
+    <!-- RecyclerView Section -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSearchedTasks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:background="#F5F5F5"
+        android:padding="8dp" />
 </LinearLayout>

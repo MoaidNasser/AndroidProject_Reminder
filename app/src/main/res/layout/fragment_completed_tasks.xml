@@ -3,21 +3,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#FFFFFF"> <!-- White background -->
 
-    <!-- Search Bar -->
+    <ImageView
+        android:id="@+id/Today"
+        android:layout_width="367dp"
+        android:layout_height="210dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Today View Image"
+        android:scaleType="fitCenter"
+        android:src="@drawable/done" />
+
+    <!-- Search Bar Section -->
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Search tasks"
-        android:padding="8dp"
-        android:inputType="text" />
+        android:padding="12dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_search_background"
+        android:inputType="text"
+        android:textColorHint="#757575"
+        android:fontFamily="sans-serif-light" />
 
+    <!-- Black Line Below Search Bar -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:background="#000000" /> <!-- Black line -->
+
+    <!-- Task List RecyclerView Section -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewCompletedTasks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:padding="8dp"
+        android:layout_marginTop="8dp" />
 </LinearLayout>

@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="button_background_color_light">#1976D2</color> <!-- Blue for light mode -->
+    <color name="button_background_color_dark">#BBDEFB</color> <!-- Light blue for dark mode -->
+    <color name="button_text_color_light">#FFFFFF</color> <!-- White text -->
+    <color name="button_text_color_dark">#000000</color> <!-- Black text -->
+
 </resources>

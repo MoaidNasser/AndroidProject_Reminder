@@ -3,28 +3,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".ui.home.HomeFragment">
 
-    <!-- Search Bar -->
+    <!-- ImageView for "today view" at the top -->
+    <ImageView
+        android:id="@+id/Today"
+        android:layout_width="367dp"
+        android:layout_height="210dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="Today View Image"
+        android:scaleType="fitCenter"
+        android:src="@drawable/today" /> <!-- Margin for spacing below the image -->
+
+    <!-- Search Bar Section -->
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_search_background"
+        android:fontFamily="sans-serif-light"
         android:hint="Search tasks"
-        android:padding="8dp"
-        android:inputType="text" />
+        android:inputType="text"
+        android:padding="12dp"
+        android:textColorHint="#757575" />
 
+    <!-- Black Line Below Search Bar -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp"
+        android:background="#000000" /> <!-- Black line -->
+
+    <!-- Checkbox Section -->
     <CheckBox
         android:id="@+id/sortByPriorityCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sort by Priority"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/rounded_checkbox_background"
+        android:fontFamily="sans-serif"
         android:padding="8dp"
-        android:layout_marginTop="8dp" />
+        android:text="Sort by Priority"
+        android:textColor="#1976D2"
+        android:textStyle="bold" />
 
+    <!-- Blue Line Between Checkbox and RecyclerView -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="8dp"
+        android:background="#1976D2" /> <!-- Blue line -->
+
+    <!-- Task List RecyclerView Section -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewToday"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:background="#FFFFFF"
+        android:padding="8dp" />
+
 </LinearLayout>

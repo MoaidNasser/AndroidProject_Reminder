@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.a1212508_1211441_courseproject.DataBaseHelper;
 import com.example.a1212508_1211441_courseproject.EditTaskActivity;
 import com.example.a1212508_1211441_courseproject.R;
+import com.example.a1212508_1211441_courseproject.ShowTaskActivity;
 import com.example.a1212508_1211441_courseproject.TaskAdapter;
 import com.example.a1212508_1211441_courseproject.TaskModel;
 
@@ -140,63 +141,17 @@ public class SearchFragment extends Fragment {
     }
 
     private void showTaskOptions(TaskModel task) {
-        // Create an AlertDialog to display task details and options to Delete or Edit
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        Intent showTaskIntent = new Intent(getContext(), ShowTaskActivity.class);
 
-        // Set task details as message in the dialog
-        builder.setTitle("Task Details")
-                .setMessage("Title: " + task.getTitle() + "\n" +
-                        "Description: " + task.getDescription() + "\n" +
-                        "Due Date: " + task.getDueDate() + "\n" +
-                        "Priority: " + task.getPriority() + "\n" +
-                        "Status: " + task.getStatus()
-                )
-                .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Call the edit function (start EditTaskActivity with the task data)
-                        editTask(task);
-                    }
-                })
-                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Call the delete function
-                        deleteTask(task);
-                    }
-                })
-                .setNeutralButton("Cancel", null)  // Close the dialog
-                .show();
-    }
+        showTaskIntent.putExtra("taskId", task.getId());
+        showTaskIntent.putExtra("taskTitle", task.getTitle());
+        showTaskIntent.putExtra("taskDescription", task.getDescription());
+        showTaskIntent.putExtra("taskDueDate", task.getDueDate());
+        showTaskIntent.putExtra("taskPriority", task.getPriority());
+        showTaskIntent.putExtra("taskStatus", task.getStatus());
 
-    private void editTask(TaskModel task) {
-        // Create an Intent to start EditTaskActivity
-        Intent intent = new Intent(getContext(), EditTaskActivity.class);
+        startActivity(showTaskIntent);
 
-        // Pass task data to the EditTaskActivity
-        intent.putExtra("taskId", task.getId());
-        intent.putExtra("taskTitle", task.getTitle());
-        intent.putExtra("taskDescription", task.getDescription());
-        intent.putExtra("taskDueDate", task.getDueDate());
-        intent.putExtra("taskPriority", task.getPriority());
-        intent.putExtra("taskStatus", task.getStatus());
-
-        // Start EditTaskActivity
-        startActivity(intent);
-    }
-
-    private void deleteTask(TaskModel task) {
-        // Delete the task from the database
-        boolean isDeleted = dbHelper.deleteTask(task.getId());
-
-        if (isDeleted) {
-            Toast.makeText(getContext(), "Task deleted successfully", Toast.LENGTH_SHORT).show();
-            // Update the RecyclerView by removing the task
-            allTasksList.remove(task);
-            taskAdapter.notifyDataSetChanged();
-        } else {
-            Toast.makeText(getContext(), "Failed to delete task", Toast.LENGTH_SHORT).show();
-        }
     }
 
 }

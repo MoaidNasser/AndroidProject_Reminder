@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.a1212508_1211441_courseproject.DataBaseHelper;
 import com.example.a1212508_1211441_courseproject.EditTaskActivity;
 import com.example.a1212508_1211441_courseproject.R;
+import com.example.a1212508_1211441_courseproject.ShowTaskActivity;
 import com.example.a1212508_1211441_courseproject.TaskAdapter;
 import com.example.a1212508_1211441_courseproject.TaskModel;
 import com.example.a1212508_1211441_courseproject.databinding.FragmentHomeBinding;
@@ -154,43 +155,16 @@ public class HomeFragment extends Fragment {
     }
 
     private void showTaskOptions(TaskModel task) {
-        // Create an AlertDialog to display task details and options to Delete or Edit
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        Intent showTaskIntent = new Intent(getContext(), ShowTaskActivity.class);
 
-        // Set task details as message in the dialog
-        builder.setTitle("Task Details")
-                .setMessage("Title: " + task.getTitle() + "\n" +
-                        "Description: " + task.getDescription() + "\n" +
-                        "Due Date: " + task.getDueDate() + "\n" +
-                        "Priority: " + task.getPriority() + "\n" +
-                        "Status: " + task.getStatus()
-                )
-                .setPositiveButton("Edit", (dialog, which) -> editTask(task))
-                .setNegativeButton("Delete", (dialog, which) -> deleteTask(task))
-                .setNeutralButton("Cancel", null)  // Close the dialog
-                .show();
-    }
+        showTaskIntent.putExtra("taskId", task.getId());
+        showTaskIntent.putExtra("taskTitle", task.getTitle());
+        showTaskIntent.putExtra("taskDescription", task.getDescription());
+        showTaskIntent.putExtra("taskDueDate", task.getDueDate());
+        showTaskIntent.putExtra("taskPriority", task.getPriority());
+        showTaskIntent.putExtra("taskStatus", task.getStatus());
 
-    private void editTask(TaskModel task) {
-        Intent intent = new Intent(getContext(), EditTaskActivity.class);
-        intent.putExtra("taskId", task.getId());
-        intent.putExtra("taskTitle", task.getTitle());
-        intent.putExtra("taskDescription", task.getDescription());
-        intent.putExtra("taskDueDate", task.getDueDate());
-        intent.putExtra("taskPriority", task.getPriority());
-        intent.putExtra("taskStatus", task.getStatus());
-        startActivity(intent);
-    }
+        startActivity(showTaskIntent);
 
-    private void deleteTask(TaskModel task) {
-        boolean isDeleted = dbHelper.deleteTask(task.getId());
-        if (isDeleted) {
-            Toast.makeText(getContext(), "Task deleted successfully", Toast.LENGTH_SHORT).show();
-            todayTasksList.remove(task);
-            filteredTasksList.remove(task);
-            taskAdapter.notifyDataSetChanged();
-        } else {
-            Toast.makeText(getContext(), "Failed to delete task", Toast.LENGTH_SHORT).show();
-        }
     }
 }
