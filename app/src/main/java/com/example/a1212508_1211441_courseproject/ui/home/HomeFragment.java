@@ -42,14 +42,12 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
     private List<TaskModel> todayTasksList;
-    private List<TaskModel> filteredTasksList; // List to hold filtered tasks
+    private List<TaskModel> filteredTasksList;
     private DataBaseHelper dbHelper;
-    private EditText searchEditText; // Search bar input
-    private CheckBox sortByPriorityCheckBox; // CheckBox to toggle sorting by priority
+    private EditText searchEditText;
+    private CheckBox sortByPriorityCheckBox;
 
-    public HomeFragment() {
-        // Required empty public constructor
-    }
+    public HomeFragment() {}
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -58,44 +56,38 @@ public class HomeFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recyclerViewToday);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        searchEditText = root.findViewById(R.id.searchEditText); // Initialize search bar
-        sortByPriorityCheckBox = root.findViewById(R.id.sortByPriorityCheckBox); // Initialize CheckBox
+        searchEditText = root.findViewById(R.id.searchEditText);
+        sortByPriorityCheckBox = root.findViewById(R.id.sortByPriorityCheckBox);
 
         dbHelper = new DataBaseHelper(getContext());
 
-        // Retrieve user email from Intent
         Intent intent = getActivity().getIntent();
         String loggedInUserEmail = intent.getStringExtra("email");
 
-        // Get today's date in "yyyy-MM-dd" format
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String todayDate = simpleDateFormat.format(Calendar.getInstance().getTime());
 
         if (loggedInUserEmail == null) {
             Toast.makeText(getContext(), "Error: User not logged in", Toast.LENGTH_SHORT).show();
-            return root; // Return early if no user is logged in
+            return root;
         }
 
-        // Fetch today tasks for the logged-in user
         todayTasksList = dbHelper.getAllTodayTasks(loggedInUserEmail, todayDate);
-        filteredTasksList = new ArrayList<>(todayTasksList); // Initially show all tasks
+        filteredTasksList = new ArrayList<>(todayTasksList);
 
-        // Initialize the adapter with the filtered list
         taskAdapter = new TaskAdapter(filteredTasksList, task -> showTaskOptions(task));
         recyclerView.setAdapter(taskAdapter);
 
-        // Set up sorting by priority CheckBox listener
         sortByPriorityCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 sortTasksByPriority();
             } else {
                 filteredTasksList.clear();
-                filteredTasksList.addAll(todayTasksList); // Reset to default order
+                filteredTasksList.addAll(todayTasksList);
                 taskAdapter.notifyDataSetChanged();
             }
         });
 
-        // Set up search bar listener
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -116,7 +108,7 @@ public class HomeFragment extends Fragment {
         filteredTasksList.clear();
 
         if (keyword.isEmpty()) {
-            filteredTasksList.addAll(todayTasksList); // Show all tasks if no keyword
+            filteredTasksList.addAll(todayTasksList);
         } else {
             for (TaskModel task : todayTasksList) {
                 if (task.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
@@ -126,14 +118,13 @@ public class HomeFragment extends Fragment {
             }
         }
 
-        taskAdapter.notifyDataSetChanged(); // Update the RecyclerView
+        taskAdapter.notifyDataSetChanged();
     }
 
     private void sortTasksByPriority() {
         Collections.sort(filteredTasksList, new Comparator<TaskModel>() {
             @Override
             public int compare(TaskModel t1, TaskModel t2) {
-                // High = 1, Medium = 2, Low = 3
                 return Integer.compare(getPriorityValue(t1.getPriority()), getPriorityValue(t2.getPriority()));
             }
 
@@ -146,7 +137,7 @@ public class HomeFragment extends Fragment {
                     case "Low":
                         return 3;
                     default:
-                        return 2; // Default to Medium
+                        return 2;
                 }
             }
         });
@@ -165,6 +156,5 @@ public class HomeFragment extends Fragment {
         showTaskIntent.putExtra("taskStatus", task.getStatus());
 
         startActivity(showTaskIntent);
-
     }
 }

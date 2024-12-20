@@ -33,45 +33,38 @@ public class CompletedTasksFragment extends Fragment {
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
     private List<TaskModel> completedTasksList;
-    private List<TaskModel> filteredTasksList; // List to hold filtered tasks
+    private List<TaskModel> filteredTasksList;
     private DataBaseHelper dbHelper;
-    private EditText searchEditText; // Search bar input
+    private EditText searchEditText;
 
-    public CompletedTasksFragment() {
-        // Required empty public constructor
-    }
+    public CompletedTasksFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_completed_tasks, container, false);
 
         recyclerView = rootView.findViewById(R.id.recyclerViewCompletedTasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        searchEditText = rootView.findViewById(R.id.searchEditText); // Initialize search bar
+        searchEditText = rootView.findViewById(R.id.searchEditText);
 
         dbHelper = new DataBaseHelper(getContext());
 
-        // Retrieve user email from Intent
         Intent intent = getActivity().getIntent();
         String loggedInUserEmail = intent.getStringExtra("email");
 
         if (loggedInUserEmail == null) {
             Toast.makeText(getContext(), "Error: User not logged in", Toast.LENGTH_SHORT).show();
-            return rootView; // Return early if no user is logged in
+            return rootView;
         }
 
-        // Fetch tasks for the logged-in user, sorted by due date (SQL query handles sorting)
         completedTasksList = dbHelper.getAllCompletedTasks(loggedInUserEmail);
-        filteredTasksList = new ArrayList<>(completedTasksList); // Initially show all tasks
+        filteredTasksList = new ArrayList<>(completedTasksList);
 
-        // Initialize the adapter with the filtered list
         taskAdapter = new TaskAdapter(filteredTasksList, task -> showTaskOptions(task));
         recyclerView.setAdapter(taskAdapter);
 
-        // Set up search bar listener
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -92,7 +85,7 @@ public class CompletedTasksFragment extends Fragment {
         filteredTasksList.clear();
 
         if (keyword.isEmpty()) {
-            filteredTasksList.addAll(completedTasksList); // Show all tasks if no keyword
+            filteredTasksList.addAll(completedTasksList);
         } else {
             for (TaskModel task : completedTasksList) {
                 if (task.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
@@ -102,9 +95,8 @@ public class CompletedTasksFragment extends Fragment {
             }
         }
 
-        taskAdapter.notifyDataSetChanged(); // Update the RecyclerView
+        taskAdapter.notifyDataSetChanged();
     }
-
 
     private void showTaskOptions(TaskModel task) {
         Intent showTaskIntent = new Intent(getContext(), ShowTaskActivity.class);
@@ -117,6 +109,5 @@ public class CompletedTasksFragment extends Fragment {
         showTaskIntent.putExtra("taskStatus", task.getStatus());
 
         startActivity(showTaskIntent);
-
     }
 }

@@ -32,7 +32,7 @@ public class HomeActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityHomeBinding binding;
 
-    private DataBaseHelper dbHelper; // Database Helper
+    private DataBaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         // Load saved theme preference
         SharedPreferences prefs = getSharedPreferences("theme", MODE_PRIVATE);
         boolean isDarkMode = prefs.getBoolean("is_dark_mode", false);
-        // Retrieve user email from Intent
+
 
 
 
@@ -112,9 +112,7 @@ public class HomeActivity extends AppCompatActivity {
         populateNavHeader(navigationView, email);
     }
 
-    /**
-     * Populate the navigation drawer header with the user's name and email.
-     */
+
     private void populateNavHeader(NavigationView navigationView, String email) {
         // Access the header view of the navigation drawer
         View headerView = navigationView.getHeaderView(0);

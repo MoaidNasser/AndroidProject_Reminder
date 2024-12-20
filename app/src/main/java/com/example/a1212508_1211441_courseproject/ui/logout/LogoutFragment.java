@@ -22,16 +22,12 @@ public class LogoutFragment extends Fragment {
     private Button buttonLogout;
     private SharedPreferences sharedPreferences;
 
-    public LogoutFragment() {
-        // Required empty public constructor
-    }
+    public LogoutFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Initialize SharedPreferences
         sharedPreferences = getActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_logout, container, false);
 
         buttonLogout = rootView.findViewById(R.id.buttonLogout);
@@ -42,11 +38,9 @@ public class LogoutFragment extends Fragment {
             editor.remove("password");
             editor.apply();
 
-            // Redirect to MainActivity (login screen)
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
 
-            // Close the current activity hosting this fragment
             if (getActivity() != null) {
                 getActivity().finish();
             }

@@ -33,14 +33,12 @@ public class AllTasksFragment extends Fragment {
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
     private List<TaskModel> allTasksList;
-    private List<TaskModel> filteredTasksList; // List to hold filtered tasks
+    private List<TaskModel> filteredTasksList;
     private DataBaseHelper dbHelper;
-    private EditText searchEditText; // Search bar input
-    private CheckBox sortByPriorityCheckBox; // Checkbox for sorting by priority
+    private EditText searchEditText;
+    private CheckBox sortByPriorityCheckBox;
 
-    public AllTasksFragment() {
-        // Required empty public constructor
-    }
+    public AllTasksFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,29 +47,25 @@ public class AllTasksFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerViewAllTasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        searchEditText = rootView.findViewById(R.id.searchEditText); // Initialize search bar
-        sortByPriorityCheckBox = rootView.findViewById(R.id.sortByPriorityCheckBox); // Initialize checkbox
+        searchEditText = rootView.findViewById(R.id.searchEditText);
+        sortByPriorityCheckBox = rootView.findViewById(R.id.sortByPriorityCheckBox);
 
         dbHelper = new DataBaseHelper(getContext());
 
-        // Retrieve user email from Intent
         Intent intent = getActivity().getIntent();
         String loggedInUserEmail = intent.getStringExtra("email");
 
         if (loggedInUserEmail == null) {
             Toast.makeText(getContext(), "Error: User not logged in", Toast.LENGTH_SHORT).show();
-            return rootView; // Return early if no user is logged in
+            return rootView;
         }
 
-        // Fetch tasks for the logged-in user
         allTasksList = dbHelper.getAllTasksSortedByDate(loggedInUserEmail);
-        filteredTasksList = new ArrayList<>(allTasksList); // Initially show all tasks
+        filteredTasksList = new ArrayList<>(allTasksList);
 
-        // Initialize the adapter with the filtered list
         taskAdapter = new TaskAdapter(filteredTasksList, task -> showTaskOptions(task));
         recyclerView.setAdapter(taskAdapter);
 
-        // Set up search bar listener
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -85,7 +79,6 @@ public class AllTasksFragment extends Fragment {
             public void afterTextChanged(Editable s) {}
         });
 
-        // Set up checkbox listener for sorting by priority
         sortByPriorityCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 sortTasksByPriority();
@@ -101,7 +94,7 @@ public class AllTasksFragment extends Fragment {
         filteredTasksList.clear();
 
         if (keyword.isEmpty()) {
-            filteredTasksList.addAll(allTasksList); // Show all tasks if no keyword
+            filteredTasksList.addAll(allTasksList);
         } else {
             for (TaskModel task : allTasksList) {
                 if (task.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
@@ -111,7 +104,7 @@ public class AllTasksFragment extends Fragment {
             }
         }
 
-        taskAdapter.notifyDataSetChanged(); // Update the RecyclerView
+        taskAdapter.notifyDataSetChanged();
     }
 
     private void sortTasksByPriority() {
@@ -141,6 +134,5 @@ public class AllTasksFragment extends Fragment {
         showTaskIntent.putExtra("taskStatus", task.getStatus());
 
         startActivity(showTaskIntent);
-
     }
 }

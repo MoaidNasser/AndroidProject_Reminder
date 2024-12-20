@@ -18,7 +18,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        // Initialize views
         dbHelper = new DataBaseHelper(this);
         editTextEmail = findViewById(R.id.et_email);
         editTextFirstName = findViewById(R.id.editTextFirstName);
@@ -27,7 +26,6 @@ public class SignUpActivity extends AppCompatActivity {
         editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
         Button signUpButton = findViewById(R.id.btn_sign_up);
 
-        // Handle Sign Up button click
         signUpButton.setOnClickListener(v -> {
             String email = editTextEmail.getText().toString().trim();
             String firstName = editTextFirstName.getText().toString().trim();
@@ -36,7 +34,6 @@ public class SignUpActivity extends AppCompatActivity {
             String confirmPassword = editTextConfirmPassword.getText().toString().trim();
 
             if (validateInputs(email, firstName, lastName, password, confirmPassword)) {
-                // Attempt to save user to database
                 boolean isInserted = dbHelper.registerUser(email, firstName, lastName, password);
                 if (isInserted) {
                     Toast.makeText(this, "Sign up successful! Welcome " + firstName, Toast.LENGTH_SHORT).show();

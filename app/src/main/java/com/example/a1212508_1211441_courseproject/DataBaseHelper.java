@@ -21,21 +21,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Users table
+
         db.execSQL("CREATE TABLE Users(" +
                 "email TEXT PRIMARY KEY, " +
                 "first_name TEXT, " +
                 "last_name TEXT, " +
                 "password TEXT)");
 
-        // Tasks table with updated schema
         db.execSQL("CREATE TABLE Tasks(" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "email TEXT, " +
                 "title TEXT, " +
                 "description TEXT, " +
-                "due_date_time TEXT, " + // Due date and time
-                "priority TEXT, " +      // Priority level
+                "due_date_time TEXT, " +
+                "priority TEXT, " +
                 "status TEXT DEFAULT 'Pending', " + // Completion status
                 "reminder INTEGER DEFAULT 0, " +    // Reminder flag: 0 = off, 1 = on
                 "FOREIGN KEY(email) REFERENCES Users(email))");

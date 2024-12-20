@@ -23,27 +23,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         dbHelper = new DataBaseHelper(this);
 
-        // Initialize UI elements
         editTextEmail = findViewById(R.id.et_email);
         editTextPassword = findViewById(R.id.et_password);
         checkBoxRememberMe = findViewById(R.id.cb_remember_me);
         Button loginButton = findViewById(R.id.btn_sign_in);
         Button signUpButton = findViewById(R.id.btn_sign_up);
 
-        // Load saved credentials if "Remember Me" was checked last time
         loadAndValidateRememberedCredentials();
 
-        // Set listeners for buttons
         setUpButtonListeners(loginButton, signUpButton);
     }
 
-    /**
-     * Set listeners for login and sign up buttons.
-     */
+
     private void setUpButtonListeners(Button loginButton, Button signUpButton) {
         // Login Button
         loginButton.setOnClickListener(v -> handleLogin());
@@ -52,9 +46,7 @@ public class MainActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(v -> openSignUpActivity());
     }
 
-    /**
-     * Handle login functionality.
-     */
+
     private void handleLogin() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -68,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         if (dbHelper.authenticateUser(email, password)) {
             Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
 
-            // Save credentials if "Remember Me" is checked
             if (checkBoxRememberMe.isChecked()) {
                 saveCredentials(email, password);
             } else {
@@ -82,9 +73,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Load saved credentials and validate them in the database.
-     */
+
     private void loadAndValidateRememberedCredentials() {
         String email = sharedPreferences.getString("email", null);
         String password = sharedPreferences.getString("password", null);

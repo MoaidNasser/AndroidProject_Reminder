@@ -30,19 +30,16 @@ public class NewTaskFragment extends Fragment {
     private CheckBox checkBoxReminder, checkBoxCompletionStatus;
     private Button buttonSaveTask;
 
-    private DataBaseHelper dbHelper; // Database Helper
+    private DataBaseHelper dbHelper;
     private String dueDateString, dueTimeString;
 
-    public NewTaskFragment() {
-        // Required empty public constructor
-    }
+    public NewTaskFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_new_task, container, false);
 
-        // Initialize views
         editTextTaskTitle = rootView.findViewById(R.id.editTextTaskTitle);
         editTextTaskDescription = rootView.findViewById(R.id.editTextTaskDescription);
         buttonDueDate = rootView.findViewById(R.id.buttonDueDate);
@@ -52,9 +49,8 @@ public class NewTaskFragment extends Fragment {
         checkBoxCompletionStatus = rootView.findViewById(R.id.checkBoxCompletionStatus);
         buttonSaveTask = rootView.findViewById(R.id.buttonSaveTask);
 
-        dbHelper = new DataBaseHelper(getContext()); // Initialize database helper
+        dbHelper = new DataBaseHelper(getContext());
 
-        // Retrieve user email from Intent
         Intent intent = getActivity().getIntent();
         String loggedInUserEmail = intent.getStringExtra("email");
 
@@ -63,23 +59,17 @@ public class NewTaskFragment extends Fragment {
             return rootView;
         }
 
-        // Setup spinner for priority selection
         setupPrioritySpinner();
-
-        // Set up listeners for date and time pickers
         setupDatePicker();
         setupTimePicker();
 
-        // Handle save button click
         buttonSaveTask.setOnClickListener(v -> {
-            // Collect input values
             String taskTitle = editTextTaskTitle.getText().toString().trim();
             String taskDescription = editTextTaskDescription.getText().toString().trim();
             String priority = spinnerPriority.getSelectedItem().toString();
             boolean reminder = checkBoxReminder.isChecked();
             boolean isCompleted = checkBoxCompletionStatus.isChecked();
 
-            // Ensure date and time are selected
             if (dueDateString == null || dueTimeString == null || taskTitle.isEmpty() || taskDescription.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 return;
@@ -87,13 +77,10 @@ public class NewTaskFragment extends Fragment {
 
             String status = isCompleted ? "Completed" : "Pending";
 
-            // Append reminder note if needed
             if (reminder) {
                 taskDescription += " [Reminder Set]";
             }
 
-
-            // Save task to the database with the logged-in user's email and completion status
             boolean isInserted = dbHelper.addTask(
                     loggedInUserEmail.toString(),
                     taskTitle.toString(),
@@ -101,7 +88,7 @@ public class NewTaskFragment extends Fragment {
                     (dueDateString + " " + dueTimeString).toString(),
                     priority.toString(),
                     status.toString(),
-                    reminder ? 1 : 0  // Set reminder to 1 if checked, otherwise 0
+                    reminder ? 1 : 0
             );
 
             if (isInserted) {
@@ -116,10 +103,8 @@ public class NewTaskFragment extends Fragment {
     }
 
     private void setupPrioritySpinner() {
-        // Define priority levels directly in the code
         String[] priorityLevels = {"High", "Medium", "Low"};
 
-        // Set up the Spinner with an ArrayAdapter
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 getContext(),
                 android.R.layout.simple_spinner_item,
@@ -131,16 +116,13 @@ public class NewTaskFragment extends Fragment {
 
     private void setupDatePicker() {
         buttonDueDate.setOnClickListener(v -> {
-            // Get current date
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            // Open DatePickerDialog
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                     (view, year1, month1, dayOfMonth) -> {
-                        // Format the selected date
                         dueDateString = year1 + "-" + (month1 + 1) + "-" + dayOfMonth;
                         buttonDueDate.setText(dueDateString);
                     }, year, month, day);
@@ -150,15 +132,12 @@ public class NewTaskFragment extends Fragment {
 
     private void setupTimePicker() {
         buttonDueTime.setOnClickListener(v -> {
-            // Get current time
             Calendar calendar = Calendar.getInstance();
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             int minute = calendar.get(Calendar.MINUTE);
 
-            // Open TimePickerDialog
             TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
                     (view, hourOfDay, minute1) -> {
-                        // Format the selected time
                         dueTimeString = String.format("%02d:%02d", hourOfDay, minute1);
                         buttonDueTime.setText(dueTimeString);
                     }, hour, minute, true);

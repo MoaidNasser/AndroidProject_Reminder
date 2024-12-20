@@ -26,7 +26,6 @@ public class TaskModel {
         this.reminder = 0;
     }
 
-    // Constructor to accept all required fields
     public TaskModel(int id, String email, String title, String description, String dueDate, String priority, String status, int reminder) {
         this.id = id;
         this.email = email;
@@ -38,7 +37,6 @@ public class TaskModel {
         this.reminder = reminder;
     }
 
-    // Constructor to set all default values
     public TaskModel( String title, String description, String dueDate, String priority, String status, int reminder) {
 
         this.title = title;
@@ -49,7 +47,6 @@ public class TaskModel {
         this.reminder = reminder;
     }
 
-    // Getters and Setters for all fields
     public int getId() {
         return id;
     }

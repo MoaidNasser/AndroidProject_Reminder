@@ -28,9 +28,7 @@ import com.example.a1212508_1211441_courseproject.TaskModel;
 import java.util.Calendar;
 import java.util.List;
 
-
 public class SearchFragment extends Fragment {
-
 
     private RecyclerView recyclerView;
     private TaskAdapter taskAdapter;
@@ -40,63 +38,50 @@ public class SearchFragment extends Fragment {
     private Button buttonStartDate;
     private Button buttonEndDate;
 
-
-    private DataBaseHelper dbHelper; // Database Helper
+    private DataBaseHelper dbHelper;
     private String startDateString, endDateString;
 
-    public SearchFragment() {
-        // Required empty public constructor
-    }
+    public SearchFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
-        // Initialize views
         buttonStartDate = rootView.findViewById(R.id.buttonStartDate);
         buttonEndDate = rootView.findViewById(R.id.buttonEndDate);
         buttonSearch = rootView.findViewById(R.id.buttonSearch);
 
         recyclerView = rootView.findViewById(R.id.recyclerViewSearchedTasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        dbHelper = new DataBaseHelper(getContext()); // Initialize database helper
+        dbHelper = new DataBaseHelper(getContext());
 
-        // Retrieve user email from Intent
         Intent intent = getActivity().getIntent();
         String loggedInUserEmail = intent.getStringExtra("email");
 
         if (loggedInUserEmail == null) {
             Toast.makeText(getContext(), "Error: User not logged in", Toast.LENGTH_SHORT).show();
-            return rootView; // Return early if no user is logged in
+            return rootView;
         }
 
-        // Set up listeners for start and end date pickers
         setupStartDatePicker();
         setupEndDatePicker();
 
         buttonSearch.setOnClickListener(v -> {
-            // Ensure dates are selected
             if (startDateString == null || endDateString == null) {
                 Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Fetch tasks for the logged-in user, sorted by due date (SQL query handles sorting)
             allTasksList = dbHelper.getAllTasksBetween(loggedInUserEmail, startDateString, endDateString);
 
-            // Initialize the adapter and set it to the RecyclerView
             taskAdapter = new TaskAdapter(allTasksList, new TaskAdapter.OnTaskClickListener() {
                 @Override
                 public void onTaskClick(TaskModel task) {
-                    // Handle task click: show delete and edit options
                     showTaskOptions(task);
                 }
             });
             recyclerView.setAdapter(taskAdapter);
-
-
         });
 
         return rootView;
@@ -104,16 +89,13 @@ public class SearchFragment extends Fragment {
 
     private void setupStartDatePicker() {
         buttonStartDate.setOnClickListener(v -> {
-            // Get current date
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            // Open DatePickerDialog
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                     (view, year1, month1, dayOfMonth) -> {
-                        // Format the selected date
                         startDateString = year1 + "-" + (month1 + 1) + "-" + dayOfMonth;
                         buttonStartDate.setText(startDateString);
                     }, year, month, day);
@@ -123,16 +105,13 @@ public class SearchFragment extends Fragment {
 
     private void setupEndDatePicker() {
         buttonEndDate.setOnClickListener(v -> {
-            // Get current date
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-            // Open DatePickerDialog
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                     (view, year1, month1, dayOfMonth) -> {
-                        // Format the selected date
                         endDateString = year1 + "-" + (month1 + 1) + "-" + dayOfMonth;
                         buttonEndDate.setText(endDateString);
                     }, year, month, day);
@@ -151,7 +130,5 @@ public class SearchFragment extends Fragment {
         showTaskIntent.putExtra("taskStatus", task.getStatus());
 
         startActivity(showTaskIntent);
-
     }
-
 }
